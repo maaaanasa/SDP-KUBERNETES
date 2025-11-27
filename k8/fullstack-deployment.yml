@@ -1,11 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: fullstack-app
----
-# ===========================
-# MySQL Deployment & Service
-# ===========================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,111 +15,18 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: mysql:8.0
+          # Use platform-compatible MySQL image
+          image: mysql:8.0.32
           ports:
             - containerPort: 3306
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: Manu@1319    # ⚠️ change this for production
+              value: "Manu@1319"
             - name: MYSQL_DATABASE
-              value: taskdb
+              value: "taskdb"
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
       volumes:
         - name: mysql-storage
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql-service
-  namespace: fullstack-app
-spec:
-  selector:
-    app: mysql
-  ports:
-    - protocol: TCP
-      port: 3306
-      targetPort: 3306
-  type: ClusterIP
----
-# ===========================
-# Backend Deployment & Service
-# ===========================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: backend-deployment
-  namespace: fullstack-app
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: backend
-  template:
-    metadata:
-      labels:
-        app: backend
-    spec:
-      containers:
-        - name: backend
-          image: manasa1319/sdpkubernetes-backend:latest  # <-- change this
-          ports:
-            - containerPort: 2030
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-service
-  namespace: fullstack-app
-spec:
-  selector:
-    app: backend
-  ports:
-    - protocol: TCP
-      port: 2030
-      targetPort: 2030
-      nodePort: 30072        # Optional fixed NodePort (range 30000–32767)
-  type: NodePort
----
-# ===========================
-# Frontend Deployment & Service
-# ===========================
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: frontend-deployment
-  namespace: fullstack-app
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: frontend
-  template:
-    metadata:
-      labels:
-        app: frontend
-    spec:
-      containers:
-        - name: frontend
-          image: manasa1319/sdpkubernetes-frontend:latest  # <-- change this
-          ports:
-            - containerPort: 80
-          env:
-            - name: VITE_API_URL
-              value: "http://localhost:30072/api/tasks"  # Points to backend NodePort
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: frontend-service
-  namespace: fullstack-app
-spec:
-  selector:
-    app: frontend
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-      nodePort: 30071        # Optional fixed NodePort (range 30000–32767)
-  type: NodePort
+          emptyDir: {}  # simple storage for testing, can replace with PVC
