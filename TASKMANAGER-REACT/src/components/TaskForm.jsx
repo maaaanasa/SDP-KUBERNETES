@@ -16,7 +16,7 @@ const TaskForm = ({ onTaskAdded }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:2030/api/tasks", task)
+    axios.post("http://localhost:30072/api/tasks", task)
       .then((res) => {
         // res.data must be the created task with ID
         if (res.data) {

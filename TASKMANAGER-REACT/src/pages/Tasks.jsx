@@ -7,7 +7,7 @@ export default function Tasks() {
 
   const fetchTasks = async () => {
     try {
-      const res = await fetch(`http://localhost:2030/api/tasks/${userId}`);
+      const res = await fetch(`http://localhost:30072/api/tasks/${userId}`);
       const data = await res.json();
       setTasks(data);
     } catch (error) {
@@ -19,7 +19,7 @@ export default function Tasks() {
     if (!newTask.trim()) return;
 
     try {
-      await fetch(`http://localhost:2030/api/tasks/add/${userId}`, {
+      await fetch(`http://localhost:30072/api/tasks/add/${userId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: newTask }),

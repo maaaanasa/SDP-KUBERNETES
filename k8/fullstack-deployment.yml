@@ -115,7 +115,7 @@ spec:
             - containerPort: 80
           env:
             - name: VITE_API_URL
-              value: "http://localhost:2030/api/tasks"  # Points to backend NodePort
+              value: "http://localhost:30072/api/tasks"  # Points to backend NodePort
 ---
 apiVersion: v1
 kind: Service
